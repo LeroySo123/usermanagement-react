@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="usermanagement-api/usermanagement-api.csproj" />
+  <Project Path="usermanagement-react/usermanagement-react.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
