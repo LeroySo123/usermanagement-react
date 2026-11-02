@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Form, Button, Card } from 'react-bootstrap';
 import { Navigate, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../contexts/AuthContext";
 
 
-function LoginPage() {
-    const [useremail, setUserEmail] = useState("");
-    const [password, setPassword] = useState("");
+export default function SignIn() {
+    const [useremail, setUserEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState("");
     const [submitting, setSubmitting] = useState(false);
 
@@ -17,8 +19,9 @@ function LoginPage() {
 
     const from = location.state?.from;
     const returnPath = from
-        ? `${ from.pathname}${from.search}${from.hash}`
+        ? `${from.pathname}${from.search}${from.hash}`
         : "/";
+
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -49,48 +52,55 @@ function LoginPage() {
     }
 
     return (
-        <div className="login-container">
-            <h1>Login</h1>
+        // Use Flexbox to center the card horizontally and vertically on the screen
+        <div className="d-flex align-items-center justify-content-center bg-light" style={{ minHeight: '100vh' }}>
+            <Container style={{ maxWidth: '400px' }}>
+                <Card className="shadow-sm border-0 p-4 rounded-3">
+                    <Card.Body>
+                        <div className="text-center mb-4">
+                            <h2 className="fw-bold text-dark">Welcome</h2>
+                            <p className="text-muted small">Please enter your credentials</p>
+                        </div>
 
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="useremail">UserEmail</label>
-                    <input
-                        id="useremail"
-                        type="email"
-                        autoComplete="useremail"
-                        value={useremail}
-                        onChange={e => setUserEmail(e.target.value)}
-                        required
-                        disabled={submitting}
-                    />
-                </div>
+                        <Form onSubmit={handleSubmit}>
+                            {/* Email Input (Using Floating Labels) */}
+                            <Form.Group className="form-floating mb-3" controlId="formBasicEmail">
+                                <Form.Control
+                                    type="email"
+                                    placeholder="name@example.com"
+                                    value={useremail}
+                                    onChange={(e) => setUserEmail(e.target.value)}
+                                    required
+                                />
+                                <label className="text-muted">Email address</label>
+                            </Form.Group>
 
-                <div>
-                    <label htmlFor="password">Password</label>
-                    <input
-                        id="password"
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        disabled={submitting}
-                    />
-                </div>
+                            {/* Password Input */}
+                            <Form.Group className="form-floating mb-3" controlId="formBasicPassword">
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                                <label className="text-muted">Password</label>
+                            </Form.Group>
 
-                {error && (
-                    <p role="alert" style={{ color: "red" }}>
-                        {error}
-                    </p>
-                )}
+                            {error && (
+                                <p role="alert" style={{ color: "red" }}>
+                                    {error}
+                                </p>
+                            )}
 
-                <button type="submit" disabled={submitting}>
-                    {submitting ? "Logging in..." : "Login"}
-                </button>
-            </form>
+                            {/* Login Button */}
+                            <Button variant="primary" type="submit" className="w-100 py-2 fw-semibold shadow-sm" disabled={submitting}>
+                                {submitting ? "Logging in..." : "Login"}
+                            </Button>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
         </div>
     );
 }
-
-export default LoginPage;
