@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form, Button, Modal } from 'react-bootstrap';
 
 function UserModal({
     user,
@@ -8,7 +10,8 @@ function UserModal({
     onClose,
     saving = false,
     serverErrors = {},
-    serverMessage = ""
+    serverMessage = "",
+    showModal
 }) {
     const [name, setName] = useState(user?.name ?? "");
     const [email, setEmail] = useState(user?.email ?? "");
@@ -118,162 +121,151 @@ function UserModal({
         clientErrors.roleId || getServerError("RoleId");
 
     return (
-        <div className="modal-overlay">
-            <div
-                className="modal-content"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="user-modal-title"
-            >
-                <h2 id="user-modal-title">
+
+        <Modal
+            show={showModal}
+            onHide={onClose}
+            centered
+            backdrop={saving ? "static" : true}
+            keyboard={!saving}
+        >
+            <Modal.Header closeButton={!saving}>
+                <Modal.Title>
                     {isEditing ? "Edit User" : "Add User"}
-                </h2>
+                </Modal.Title>
+            </Modal.Header>
 
-                <form onSubmit={handleSubmit} noValidate>
-                    <label htmlFor="user-name">Name</label>
-                    <input
-                        id="user-name"
-                        type="text"
-                        value={name}
-                        aria-invalid={!!nameError}
-                        aria-describedby={
-                            nameError ? "name-error" : undefined
-                        }
-                        onChange={e => {
-                            setName(e.target.value);
-                            setClientErrors(prev => ({
-                                ...prev,
-                                name: ""
-                            }));
-                        }}
-                    />
-
-                    {nameError && (
-                        <p id="name-error" className="field-error">
+            <Form onSubmit={handleSubmit} noValidate>
+                <Modal.Body>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={name}
+                            isInvalid={!!nameError}
+                            onChange={e => {
+                                setName(e.target.value);
+                                setClientErrors(prev => ({
+                                    ...prev,
+                                    name: ""
+                                }));
+                            }}
+                        />
+                        <Form.Control.Feedback type="invalid">
                             {nameError}
-                        </p>
-                    )}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                    <label htmlFor="user-email">Email</label>
-                    <input
-                        id="user-email"
-                        type="email"
-                        value={email}
-                        aria-invalid={!!emailError}
-                        aria-describedby={
-                            emailError ? "email-error" : undefined
-                        }
-                        onChange={e => {
-                            setEmail(e.target.value);
-                            setClientErrors(prev => ({
-                                ...prev,
-                                email: ""
-                            }));
-                        }}
-                    />
-
-                    {emailError && (
-                        <p id="email-error" className="field-error">
+                    <Form.Group className="mb-3">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control
+                            type="email"
+                            value={email}
+                            isInvalid={!!emailError}
+                            onChange={e => {
+                                setEmail(e.target.value);
+                                setClientErrors(prev => ({
+                                    ...prev,
+                                    email: ""
+                                }));
+                            }}
+                        />
+                        <Form.Control.Feedback type="invalid">
                             {emailError}
-                        </p>
-                    )}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                    <label htmlFor="user-password">Password</label>
-                    <input
-                        id="user-password"
-                        type="password"
-                        value={password}
-                        aria-invalid={!!passwordError}
-                        aria-describedby={
-                            passwordError ? "password-error" : undefined
-                        }
-                        onChange={e => {
-                            setPassword(e.target.value);
-                            setClientErrors(prev => ({
-                                ...prev,
-                                password: ""
-                            }));
-                        }}
-                        onBlur={() => {
-                            setClientErrors(
-                                validatePassword(password, isEditing)
-                            );
-                        }}
-                    />
-
-                    {passwordError && (
-                        <p id="password-error" className="field-error">
+                    <Form.Group className="mb-3">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            isInvalid={!!passwordError}
+                            onChange={e => {
+                                setPassword(e.target.value);
+                                setClientErrors(prev => ({
+                                    ...prev,
+                                    password: ""
+                                }));
+                            }}
+                            onBlur={() => {
+                                setClientErrors(
+                                    validatePassword(password, isEditing)
+                                );
+                            }}
+                        />
+                        <Form.Control.Feedback type="invalid">
                             {passwordError}
-                        </p>
-                    )}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                    <label htmlFor="user-roleId">Role</label>
-
-                    <select
-                        id="user-roleId"
-                        value={roleId ?? ""}
-                        aria-invalid={!!roleIdError}
-                        aria-describedby={
-                            roleIdError ? "roleId-error" : undefined
-                        }
-                        onChange={(e) => {
-                            setRoleId(
-                                e.target.value === ""
+                    <Form.Group className="mb-3">
+                        <Form.Label>Role</Form.Label>
+                        <Form.Select
+                            value={roleId ?? ""}
+                            isInvalid={!!roleIdError}
+                            onChange={e => {
+                                const selectedId = e.target.value === ""
                                     ? null
-                                    : Number(e.target.value)
-                            );
-                            setRoleName(roles.find(r => r.id === Number(e.target.value))?.roleName ?? "");
-                            setClientErrors(prev => ({
-                                ...prev,
-                                roleId: ""
-                            }));
-                            }
-                        }
-                    >
-                        <option value="">-- Select Role --</option>
+                                    : Number(e.target.value);
 
-                        {roles.map(role => (
-                            <option key={role.id} value={role.id}>
-                                {role.roleName}
-                            </option>
-                        ))}
-                    </select>
+                                setRoleId(selectedId);
+                                setRoleName(
+                                    roles.find(r => r.id === selectedId)?.roleName ?? ""
+                                );
+                                setClientErrors(prev => ({
+                                    ...prev,
+                                    roleId: ""
+                                }));
+                            }}
+                        >
+                            <option value="">-- Select Role --</option>
 
-                    {roleIdError && (
-                        <p id="roleId-error" className="field-error">
+                            {roles.map(role => (
+                                <option key={role.id} value={role.id}>
+                                    {role.roleName}
+                                </option>
+                            ))}
+                        </Form.Select>
+                        <Form.Control.Feedback type="invalid">
                             {roleIdError}
-                        </p>
-                    )}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
                     {serverMessage &&
                         !nameError &&
                         !emailError &&
                         !passwordError && (
-                            <p role="alert" className="field-error">
+                            <div className="alert alert-danger" role="alert">
                                 {serverMessage}
-                            </p>
+                            </div>
                         )}
+                </Modal.Body>
 
-                    <div className="modal-actions">
-                        <button
-                            type="button"
-                            onClick={onClose}
-                            disabled={saving}
-                        >
-                            Cancel
-                        </button>
+                <Modal.Footer>
+                    <Button
+                        variant="secondary"
+                        onClick={onClose}
+                        disabled={saving}
+                    >
+                        Cancel
+                    </Button>
 
-                        <button type="submit" disabled={saving}>
-                            {saving
-                                ? "Saving..."
-                                : isEditing
-                                    ? "Save Changes"
-                                    : "Add User"}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        disabled={saving}
+                    >
+                        {saving
+                            ? "Saving..."
+                            : isEditing
+                                ? "Save Changes"
+                                : "Add User"}
+                    </Button>
+                </Modal.Footer>
+            </Form>
+        </Modal>
+
     );
 }
 

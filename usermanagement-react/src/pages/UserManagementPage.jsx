@@ -237,7 +237,7 @@ function UserManagementPage() {
             </div>
 
             {/* Add / Edit Modal */}
-            {showModal && (
+            
                 <UserModal
                     key={editingUser?.id ?? "new"}
                     user={editingUser}
@@ -247,9 +247,9 @@ function UserManagementPage() {
                     saving={saving}
                     serverErrors={formErrors}
                     serverMessage={formMessage}
+                    showModal={showModal}
                 />
-            )}
-
+            
 
         </div>
     );
