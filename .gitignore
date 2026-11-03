@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /usermanagement-api/appsettings.Development.json
 /usermanagement-api/appsettings.json
 
+/usermanagement-react/src/components/UserModal - Copy.jsx
