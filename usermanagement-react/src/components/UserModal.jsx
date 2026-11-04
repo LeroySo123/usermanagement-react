@@ -16,6 +16,7 @@ function UserModal({
     const [name, setName] = useState(user?.name ?? "");
     const [email, setEmail] = useState(user?.email ?? "");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [roleId, setRoleId] = useState(user?.roleId ?? null);
     const [roleName, setRoleName] = useState(user?.roleName ?? "");
 
@@ -62,7 +63,13 @@ function UserModal({
         if (passwordError) {
             errors.password = passwordError;
         }
-            
+
+        var confirmPasswordError = validateConfirmPassword(confirmPassword, isEditing, password);
+        if (confirmPasswordError) {
+            errors.confirmPassword = confirmPasswordError;
+        }
+
+
         if (roleId == null) {
             errors.roleId = "Role is required.";
         }
@@ -105,6 +112,23 @@ function UserModal({
         return "";
     }
 
+    function validateConfirmPassword(confirmPassword, isEditing, password) {
+        if (!isEditing && confirmPassword === "") {
+            return "Confirm Password is required.";
+        }
+
+        // Edit mode: empty password means no change
+        if (isEditing && password === "" && confirmPassword === "") {
+            return "";
+        }
+
+        if (password !== confirmPassword) {
+            return "Passwords do not match.";
+        }
+
+        return "";
+    }
+
     const nameError =
         clientErrors.name || getServerError("Name");
 
@@ -116,6 +140,9 @@ function UserModal({
 
     const passwordError =
         clientErrors.password || getServerError("Password");
+
+    const confirmPasswordError =
+        clientErrors.confirmPassword || getServerError("ConfirmPassword");
 
     const roleIdError =
         clientErrors.roleId || getServerError("RoleId");
@@ -196,6 +223,25 @@ function UserModal({
                         />
                         <Form.Control.Feedback type="invalid">
                             {passwordError}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>Confirm Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={confirmPassword}
+                            isInvalid={!!confirmPasswordError}
+                            onChange={e => {
+                                setConfirmPassword(e.target.value);
+                                setClientErrors(prev => ({
+                                    ...prev,
+                                    confirmPassword: ""
+                                }));
+                            }}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {confirmPasswordError}
                         </Form.Control.Feedback>
                     </Form.Group>
 
