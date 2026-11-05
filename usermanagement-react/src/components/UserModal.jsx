@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Modal } from 'react-bootstrap';
 
 function UserModal({

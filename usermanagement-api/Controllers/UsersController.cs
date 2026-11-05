@@ -108,6 +108,11 @@ public class UsersController : ControllerBase
                 message = "User not found."
             });
 
+        if(existing.RoleId == 3)
+        {
+            return Forbid("You cannot update a SuperAdmin user.");
+        }
+
         if (await _service.EmailExistsAsync(request.Email, id))
         {
             return Conflict(new
@@ -132,6 +137,13 @@ public class UsersController : ControllerBase
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteUser(int id)
     {
+        var existing = await _service.GetByIdAsync(id);
+
+        if (existing is not null && existing.RoleId == 3)
+        {
+            return Forbid("You cannot delete a SuperAdmin user.");
+        }
+
         var deleted = await _service.DeleteAsync(id);
 
         if (!deleted)

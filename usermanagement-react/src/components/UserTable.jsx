@@ -1,8 +1,9 @@
+import { Table, Button } from 'react-bootstrap';
 
 function UserTable({ users, onEdit, onDelete }) {
 
     return (
-        <table>
+        <Table striped bordered hover responsive>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -12,7 +13,6 @@ function UserTable({ users, onEdit, onDelete }) {
                     <th>Action</th>
                 </tr>
             </thead>
-
             <tbody>
                 {users.map(user => (
                     <tr key={user.id}>
@@ -21,30 +21,35 @@ function UserTable({ users, onEdit, onDelete }) {
                         <td>{user.email}</td>
                         <td>{user.roleName}</td>
                         <td>
-                            <button
-                                type="button"
+                            <Button
+                                variant="primary"
+                                size="sm"
+                                className="me-2"
                                 onClick={() => onEdit(user)}
+                                disabled={user.roleId === 3 ? true : false}
                             >
                                 Edit
-                            </button>
+                            </Button>
 
-                            <button
-                                type="button"
+                            <Button
+                                variant="danger"
+                                size="sm"
                                 onClick={() => onDelete(user)}
+                                disabled={user.roleId === 3 ? true : false}
                             >
                                 Delete
-                            </button>
+                            </Button>
                         </td>
                     </tr>
                 ))}
 
                 {users.length === 0 && (
                     <tr>
-                        <td colSpan={4}>No users found.</td>
+                        <td colSpan={5}>No users found.</td>
                     </tr>
                 )}
             </tbody>
-        </table>
+        </Table>
     );
 }
 
