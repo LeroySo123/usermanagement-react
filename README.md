@@ -10,6 +10,8 @@ This personal project focuses on developing modern React frontend applications, 
 - React
 - JavaScript
 - React Router
+- React Bootstrap
+- Bootstrap 5
 - HTML5 / CSS3
 - React Hooks
 
@@ -45,7 +47,9 @@ This personal project focuses on developing modern React frontend applications, 
 - Secure password hashing
 
 ### React Frontend
-- Reusable components for user tables and forms
+- Reusable components for user tables, forms and modals
+- UI components built with React Bootstrap
+- Responsive layouts using Bootstrap grid and utilities
 - State management using React Hooks
 - Custom `useUsers` Hook for user management
 - REST API integration using Fetch API
@@ -56,6 +60,7 @@ This personal project focuses on developing modern React frontend applications, 
 The application separates the frontend, backend API and database layers.
 
 - **React:** Handles the user interface, form inputs, component state and API requests.
+- **React Bootstrap:** Provides reusable UI components, including tables, buttons, forms and modals.
 - **ASP.NET Core Web API:** Handles HTTP requests, business logic, authentication and data access.
 - **Entity Framework Core:** Provides database access and LINQ queries.
 - **SQL Server:** Stores user and application data.
@@ -97,6 +102,7 @@ Ensure the frontend API configuration points to the running backend.
 
 - Complete role-based access control
 - Expand application features with additional management modules
+- Improve UI styling and responsive design
 - Deploy the application to Azure App Service
 - Implement automated CI/CD using GitHub Actions
 
@@ -110,8 +116,6 @@ Work in Progress
 
 This project is currently under active development.
 
-Core functionality, including user management and authentication,
-has been implemented.
+Core functionality, including user management and authentication, has been implemented.
 
-UI styling, responsive design, and additional features
-are still under development.
+UI styling, responsive design, and additional features are still under development.
