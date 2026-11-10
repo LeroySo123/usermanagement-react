@@ -37,9 +37,18 @@ namespace usermanagement_api.Services
 
         public async Task<ProductDto> CreateAsync(ProductRequest request)
         {
+            var name = request.Name.Trim();
+            var normalizedName = NormalizeName(name);
+
+            if (await NameExistsAsync(normalizedName))
+            {
+                throw new DuplicateProductNameException();
+            }
+
             var product = new Product
             {
-                Name = request.Name.Trim(),
+                Name = name,
+                NormalizedName = normalizedName,
                 Price = request.Price,
                 IsActive = true
             };
@@ -58,7 +67,16 @@ namespace usermanagement_api.Services
                 return false;
             }
 
-            product.Name = request.Name.Trim();
+            var name = request.Name.Trim();
+            var normalizedName = NormalizeName(name);
+
+            if (await NameExistsAsync(normalizedName, id))
+            {
+                throw new DuplicateProductNameException();
+            }
+
+            product.Name = name;
+            product.NormalizedName = normalizedName;
             product.Price = request.Price;
             await _context.SaveChangesAsync();
             return true;
@@ -84,5 +102,23 @@ namespace usermanagement_api.Services
             Price = product.Price,
             IsActive = product.IsActive
         };
+
+        private Task<bool> NameExistsAsync(string normalizedName, int? excludedProductId = null)
+        {
+            return _context.Products
+                .AsNoTracking()
+                .AnyAsync(product =>
+                    product.NormalizedName == normalizedName &&
+                    (!excludedProductId.HasValue || product.Id != excludedProductId.Value));
+        }
+
+        private static string NormalizeName(string name)
+        {
+            return name.ToUpperInvariant();
+        }
+    }
+
+    public sealed class DuplicateProductNameException : Exception
+    {
     }
 }

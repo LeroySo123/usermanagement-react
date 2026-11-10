@@ -35,8 +35,15 @@ namespace usermanagement_api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateProduct(ProductRequest request)
         {
-            var product = await _productService.CreateAsync(request);
-            return Created($"/api/products/{product.Id}", product);
+            try
+            {
+                var product = await _productService.CreateAsync(request);
+                return Created($"/api/products/{product.Id}", product);
+            }
+            catch (DuplicateProductNameException)
+            {
+                return Conflict(ProductNameConflict());
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -44,8 +51,15 @@ namespace usermanagement_api.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateProduct(int id, ProductRequest request)
         {
-            var updated = await _productService.UpdateAsync(id, request);
-            return updated ? NoContent() : NotFound();
+            try
+            {
+                var updated = await _productService.UpdateAsync(id, request);
+                return updated ? NoContent() : NotFound();
+            }
+            catch (DuplicateProductNameException)
+            {
+                return Conflict(ProductNameConflict());
+            }
         }
 
         [HttpPatch("{id:int}/active")]
@@ -55,6 +69,17 @@ namespace usermanagement_api.Controllers
         {
             var updated = await _productService.SetActiveAsync(id, request.IsActive);
             return updated ? NoContent() : NotFound();
+        }
+
+        private static object ProductNameConflict()
+        {
+            return new
+            {
+                errors = new Dictionary<string, string[]>
+                {
+                    ["Name"] = new[] { "A product with this name already exists." }
+                }
+            };
         }
     }
 }

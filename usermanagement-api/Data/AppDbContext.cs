@@ -50,10 +50,16 @@
                         .IsRequired()
                         .HasMaxLength(100);
 
+                    entity.Property(p => p.NormalizedName)
+                        .IsRequired()
+                        .HasMaxLength(100);
+
                     entity.Property(p => p.Price)
                         .HasPrecision(18, 2);
 
                     entity.HasIndex(p => p.Name);
+                    entity.HasIndex(p => p.NormalizedName)
+                        .IsUnique();
                 });
 
                 modelBuilder.Entity<Order>(entity =>
