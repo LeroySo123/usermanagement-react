@@ -8,6 +8,9 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import UserManagementPage from "./pages/UserManagementPage";
 import OrderManagementPage from "./pages/OrderManagementPage";
+import AdminOrdersPage from "./pages/AdminOrdersPage";
+import MyOrdersPage from "./pages/MyOrdersPage";
+import ProductManagementPage from "./pages/ProductManagementPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 import RequireRole from "./components/auth/RequireRole";
@@ -34,14 +37,24 @@ function App() {
                             path="/users"
                             element={<UserManagementPage />}
                         />
-                    </Route>
-
-                    <Route element={<RequireRole allowedRoles={["Admin", "SuperAdmin", "User"]} />}>
                         <Route
-                            path="/orders"
-                            element={<OrderManagementPage />}
+                            path="/admin/orders"
+                            element={<AdminOrdersPage />}
+                        />
+                        <Route
+                            path="/admin/products"
+                            element={<ProductManagementPage />}
                         />
                     </Route>
+
+                    <Route element={<RequireRole allowedRoles={["User"]} />}>
+                        <Route
+                            path="/my-orders"
+                            element={<MyOrdersPage />}
+                        />
+                    </Route>
+
+                    <Route path="/orders" element={<OrderManagementPage />} />
                 </Route>
             </Route>
 

@@ -62,6 +62,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 builder.Services.AddCors(options =>

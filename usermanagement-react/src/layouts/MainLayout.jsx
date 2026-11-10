@@ -60,6 +60,16 @@ function MainLayout() {
                     </Nav.Link>
                 )}
 
+                {["Admin", "SuperAdmin"].includes(user?.role) && (
+                    <Nav.Link
+                        as={NavLink}
+                        to="/admin/products"
+                        onClick={closeMenu}
+                    >
+                        Product Management
+                    </Nav.Link>
+                )}
+
                 {["Admin", "SuperAdmin", "User"].includes(user?.role) && (
                     <Nav.Link
                         as={NavLink}
